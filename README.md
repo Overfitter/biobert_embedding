@@ -20,7 +20,7 @@ Instead of building and do fine-tuning for an end-to-end NLP model, You can dire
 pip install biobert-embedding==0.1.1
 ```
 
-## Example 1
+## Examples
 
 word embeddings generated are list of 768 dimensional embeddings for each word. <br>
 sentence embedding generated is 768 dimensional embedding which is average of each token.
@@ -28,6 +28,7 @@ sentence embedding generated is 768 dimensional embedding which is average of ea
 ```python
 from biobert_embedding.embedding import BiobertEmbedding
 
+## Example 1
 text = "Breast cancers with HER2 amplification have a higher risk of CNS metastasis and poorer prognosis."\
 
 # Class Initialization (You can set default 'model_path=None' as your finetuned BERT model path while Initialization)
