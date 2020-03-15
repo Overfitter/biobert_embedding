@@ -20,7 +20,7 @@ Instead of building and do fine-tuning for an end-to-end NLP model, You can dire
 pip install biobert-embedding==0.1.1
 ```
 
-## Example
+## Example 1
 
 word embeddings generated are list of 768 dimensional embeddings for each word. <br>
 sentence embedding generated is 768 dimensional embedding which is average of each token.
@@ -44,4 +44,12 @@ print ('Shape of Word Embeddings: %d x %d' % (len(word_embeddings), len(word_emb
 
 print("Shape of Sentence Embedding = ",len(sentence_embedding))
 # Shape of Sentence Embedding =  768
+
+## Example 2
+sentence_vector1 = biobert.sentence_vector('Breast cancers with HER2 amplification have a higher risk of CNS metastasis and poorer prognosis.')
+sentence_vector2 = biobert.sentence_vector('Breast cancers with HER2 amplification are more aggressive, have a higher risk of CNS metastasis, and poorer prognosis.')
+
+cosine_sim = 1 - distance.cosine(sentence_vector1, sentence_vector2)
+print('cosine similarity:', cosine_sim)
+#cosine similarity: 0.992756187915802
 ```
