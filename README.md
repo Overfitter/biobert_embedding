@@ -16,21 +16,7 @@ Instead of building and do fine-tuning for an end-to-end NLP model, You can dire
 * Downloads and installs BioBERT pre-trained model (first initialization, usage in next section).
 
 ## Install
-(Recommended to create a conda env to have isolation and avoid dependency clashes)
-
 ```
-pip install biobert-embedding==0.1.1
-```
-
-Note: If you get error in installing this package (common error with Tf): <br>
-
-Installing collected packages: wrapt, tensorflow <br>
-  Found existing installation: wrapt 1.10.11 <br>
-ERROR: Cannot uninstall 'wrapt'. It is a distutils installed project....
-
-then, just do this:
-```
-pip install wrapt --upgrade --ignore-installed
 pip install biobert-embedding==0.1.1
 ```
 
