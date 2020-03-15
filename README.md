@@ -1,4 +1,4 @@
-# biobert_embedding
+# BioBert Embeddings
 Token and sentence level embeddings from BioBERT model (Biomedical Domain).
 
 [BERT](https://arxiv.org/abs/1810.04805), published by Google, is conceptually simple and empirically powerful as it obtained state-of-the-art results on eleven natural language processing tasks.  
