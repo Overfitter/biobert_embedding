@@ -23,7 +23,7 @@ pip install biobert-embedding==0.1.1
 ## Examples
 
 word embeddings generated are list of 768 dimensional embeddings for each word. <br>
-sentence embedding generated is 768 dimensional embedding which is average of each token.
+sentence embedding generated is 768 dimensional embedding.
 
 ```python
 from biobert_embedding.embedding import BiobertEmbedding
