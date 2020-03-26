@@ -17,7 +17,7 @@ Instead of building and do fine-tuning for an end-to-end NLP model, You can dire
 
 ## Install
 ```
-pip install biobert-embedding==0.1.1
+pip install biobert-embedding==0.1.2
 ```
 
 ## Examples
