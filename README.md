@@ -27,6 +27,7 @@ sentence embedding generated is 768 dimensional embedding.
 
 ```python
 from biobert_embedding.embedding import BiobertEmbedding
+from scipy.spatial import distance
 
 ## Example 1
 text = "Breast cancers with HER2 amplification have a higher risk of CNS metastasis and poorer prognosis."\
