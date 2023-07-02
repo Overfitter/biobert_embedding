@@ -15,6 +15,28 @@ logging.basicConfig(filename='app.log', filemode='w',format='%(asctime)s %(messa
 
 logger = logging.getLogger(__name__)
 
+
+def download_model(url):
+    response = requests.get(url, stream=True)
+
+    if not os.path.exists("models"):
+        os.makedirs("models")
+
+    filename = os.path.basename(url)
+
+    print("Downloading BioBert model from HuggingFace")
+
+    total = int(response.headers.get('content-length', 0))
+    with tqdm(total=total, unit='iB', unit_scale=True, ncols=70) as bar:
+        with open(filename, 'wb') as f:
+            for data in response.iter_content(chunk_size=1024):
+                size = f.write(data)
+                bar.update(size)
+
+    print("Model Downloaded! It is stored in: models/"+filename)
+
+    return "models/"+filename
+
 class BiobertEmbedding(object):
     """
     Encoding from BioBERT model (BERT finetuned on PubMed articles).
@@ -29,7 +51,7 @@ class BiobertEmbedding(object):
     def __init__(self, model_path=None):
 
         if model_path is None: # If model doesn't exist locally, download
-            model_path = self.download_model(huggingface_model_path)
+            model_path = download_model(huggingface_model_path)
         
         self.model_path = model_path
 
@@ -39,26 +61,6 @@ class BiobertEmbedding(object):
         # Load pre-trained model (weights)
         self.model = BertModel.from_pretrained(self.model_path)
         logger.info("Initialization Done !!")
-    
-
-    def download_model(url):
-        response = requests.get(url, stream=True)
-
-        if not os.path.exists("models"):
-            os.makedirs("models")
-
-        filename = os.path.basename(url)
-
-        print("Downloading BioBert model from HuggingFace")
-
-        total = int(response.headers.get('content-length', 0))
-        with tqdm(total=total, unit='iB', unit_scale=True, ncols=70) as bar:
-            with open(filename, 'wb') as f:
-                for data in response.iter_content(chunk_size=1024):
-                    size = f.write(data)
-                    bar.update(size)
-
-        print("Model Downloaded! It is stored in: models/"+filename)
         
 
 
