@@ -1,3 +1,5 @@
+Ariel: Minor updates to code to make it install with pip as of Jul-2023
+
 # BioBert Embeddings
 Token and sentence level embeddings from BioBERT model (Biomedical Domain).
 
