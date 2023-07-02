@@ -1,12 +1,14 @@
 import os
 import torch
 import logging
-import tensorflow as tf
-from pathlib import Path
-from biobert_embedding import downloader
+import requests
+from tqdm import tqdm
+from urllib.parse import urlparse
 from pytorch_pretrained_bert import BertTokenizer, BertModel, BertForMaskedLM
 
-__author__ = 'Jitendra Jangid'
+__author__ = 'Jitendra Jangid, Ariel Lubonja'
+
+huggingface_model_path = "https://huggingface.co/Ariel4/biobert-embeddings/resolve/main/pytorch_model.bin"
 
 #Create and configure logger
 logging.basicConfig(filename='app.log', filemode='w',format='%(asctime)s %(message)s', level=logging.INFO)
@@ -26,10 +28,10 @@ class BiobertEmbedding(object):
 
     def __init__(self, model_path=None):
 
-        if model_path is not None:
-            self.model_path = model_path
-        else:
-            self.model_path = downloader.get_BioBert("google drive")
+        if model_path is None: # If model doesn't exist locally, download
+            model_path = self.download_model(huggingface_model_path)
+        
+        self.model_path = model_path
 
         self.tokens = ""
         self.sentence_tokens = ""
@@ -37,6 +39,28 @@ class BiobertEmbedding(object):
         # Load pre-trained model (weights)
         self.model = BertModel.from_pretrained(self.model_path)
         logger.info("Initialization Done !!")
+    
+
+    def download_model(url):
+        response = requests.get(url, stream=True)
+
+        if not os.path.exists("models"):
+            os.makedirs("models")
+
+        filename = os.path.basename(url)
+
+        print("Downloading BioBert model from HuggingFace")
+
+        total = int(response.headers.get('content-length', 0))
+        with tqdm(total=total, unit='iB', unit_scale=True, ncols=70) as bar:
+            with open(filename, 'wb') as f:
+                for data in response.iter_content(chunk_size=1024):
+                    size = f.write(data)
+                    bar.update(size)
+
+        print("Model Downloaded! It is stored in: models/"+filename)
+        
+
 
     def process_text(self, text):
 
