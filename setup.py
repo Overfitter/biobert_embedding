@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 setuptools.setup(
     name="biobert-embedding",
     packages=['biobert_embedding'],
-    version="0.1.3",
+    version="0.1.4",
     author="Jitendra Jangid, Ariel Lubonja",
     author_email="jitujangid38@gmail.com, ariellubonja@live.com",
     description="Embeddings from BioBERT",
