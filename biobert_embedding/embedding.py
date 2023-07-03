@@ -17,23 +17,26 @@ logger = logging.getLogger(__name__)
 
 
 def download_model(url):
-    response = requests.get(url, stream=True)
-
-    if not os.path.exists("models"):
-        os.makedirs("models")
-
     filename = os.path.basename(url)
 
-    print("Downloading BioBert model from HuggingFace")
+    if os.path.isfile("models/" + filename):
+        print(f"Using existing models/" + filename)
+    else:
+        response = requests.get(url, stream=True)
 
-    total = int(response.headers.get('content-length', 0))
-    with tqdm(total=total, unit='iB', unit_scale=True, ncols=70) as bar:
-        with open("models/" + filename, 'wb') as f:
-            for data in response.iter_content(chunk_size=1024):
-                size = f.write(data)
-                bar.update(size)
+        if not os.path.exists("models"):
+            os.makedirs("models")
 
-    print("Model Downloaded! It is stored in: models/"+filename)
+        print("Downloading BioBert model from HuggingFace")
+
+        total = int(response.headers.get('content-length', 0))
+        with tqdm(total=total, unit='iB', unit_scale=True, ncols=70) as bar:
+            with open("models/" + filename, 'wb') as f:
+                for data in response.iter_content(chunk_size=1024):
+                    size = f.write(data)
+                    bar.update(size)
+
+        print("Model Downloaded! It is stored in: models/"+filename)
 
     return "models/"+filename
 
