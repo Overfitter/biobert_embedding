@@ -28,7 +28,7 @@ def download_model(url):
 
     total = int(response.headers.get('content-length', 0))
     with tqdm(total=total, unit='iB', unit_scale=True, ncols=70) as bar:
-        with open(filename, 'wb') as f:
+        with open("models/" + filename, 'wb') as f:
             for data in response.iter_content(chunk_size=1024):
                 size = f.write(data)
                 bar.update(size)
