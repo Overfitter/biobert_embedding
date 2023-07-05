@@ -88,6 +88,9 @@ class BiobertEmbedding(object):
 
 
     def handle_oov(self, tokenized_text, word_embeddings):
+        """
+        Handle out-of-vocabulary words by appending the word embeddings of the subwords
+        """
         embeddings = []
         tokens = []
         oov_len = 1
