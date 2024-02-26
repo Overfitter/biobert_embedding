@@ -15,7 +15,7 @@ setuptools.setup(
     url="https://github.com/ariellubonja/biobert_embedding",
     download_url="https://github.com/ariellubonja/biobert_embedding/archive/v0.1.3.tar.gz",
     install_requires=[
-          'torch==1.13.1',
+          'torch==2.1.2',
           'pytorch-pretrained-bert==0.6.2',
       ],
 
