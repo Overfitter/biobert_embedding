@@ -1,17 +1,57 @@
 import os
 import torch
 import logging
-import tensorflow as tf
-from pathlib import Path
-from biobert_embedding import downloader
-from pytorch_pretrained_bert import BertTokenizer, BertModel, BertForMaskedLM
+import requests
+from tqdm import tqdm
+from pytorch_pretrained_bert import BertTokenizer, BertModel
 
-__author__ = 'Jitendra Jangid'
+__author__ = 'Jitendra Jangid, Ariel Lubonja'
+
+
+huggingface_repo = "https://huggingface.co/Ariel4/biobert-embeddings/resolve/main/"
+
 
 #Create and configure logger
 logging.basicConfig(filename='app.log', filemode='w',format='%(asctime)s %(message)s', level=logging.INFO)
 
 logger = logging.getLogger(__name__)
+
+
+def download_or_use_existing(model_folder_path, filename):
+    if os.path.isfile(model_folder_path + filename):
+        print(f"Using existing " + model_folder_path + filename)
+    else:
+        # Download with Progress Bar
+        response = requests.get(huggingface_repo + filename, stream=True)
+
+        print("Downloading " + filename + " from HuggingFace")
+
+        total = int(response.headers.get('content-length', 0))
+        with tqdm(total=total, unit='iB', unit_scale=True, ncols=70) as bar:
+            with open(model_folder_path + filename, 'wb') as f:
+                for data in response.iter_content(chunk_size=1024):
+                    size = f.write(data)
+                    bar.update(size)
+
+        print("File Downloaded! It is stored in: " + model_folder_path+filename)
+
+
+def setup_model(model_folder_path="models/"):
+    """
+    Verify if the model is already downloaded, if not download it.
+    """
+    pytorch_model_filename = "pytorch_model.bin"
+    config_json_filename = "config.json"
+    vocab_filename = "vocab.txt"
+
+    if not os.path.exists(model_folder_path):
+        os.makedirs(model_folder_path)
+
+    download_or_use_existing(model_folder_path, pytorch_model_filename)
+    download_or_use_existing(model_folder_path, config_json_filename)
+    download_or_use_existing(model_folder_path, vocab_filename)
+
+    return model_folder_path
 
 class BiobertEmbedding(object):
     """
@@ -25,18 +65,19 @@ class BiobertEmbedding(object):
     """
 
     def __init__(self, model_path=None):
-
-        if model_path is not None:
-            self.model_path = model_path
-        else:
-            self.model_path = downloader.get_BioBert("google drive")
+        model_path = setup_model() # Folder containing pytorch_model.bin, config.json and vocab.txt
+        
+        self.model_path = model_path
 
         self.tokens = ""
         self.sentence_tokens = ""
+        # This needs the model folder path, not the pytorch_model.bin path
         self.tokenizer = BertTokenizer.from_pretrained(self.model_path)
         # Load pre-trained model (weights)
         self.model = BertModel.from_pretrained(self.model_path)
         logger.info("Initialization Done !!")
+        
+
 
     def process_text(self, text):
 
@@ -47,6 +88,9 @@ class BiobertEmbedding(object):
 
 
     def handle_oov(self, tokenized_text, word_embeddings):
+        """
+        Handle out-of-vocabulary words by appending the word embeddings of the subwords
+        """
         embeddings = []
         tokens = []
         oov_len = 1
