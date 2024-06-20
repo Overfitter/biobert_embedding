@@ -1,3 +1,5 @@
+Ariel: Minor updates to code to make it install with pip as of Jul-2023
+
 # BioBert Embeddings
 Token and sentence level embeddings from BioBERT model (Biomedical Domain).
 
@@ -27,6 +29,7 @@ sentence embedding generated is 768 dimensional embedding.
 
 ```python
 from biobert_embedding.embedding import BiobertEmbedding
+from scipy.spatial.distance import cosine as cosine_distance
 
 ## Example 1
 text = "Breast cancers with HER2 amplification have a higher risk of CNS metastasis and poorer prognosis."\
@@ -50,7 +53,7 @@ print("Shape of Sentence Embedding = ",len(sentence_embedding))
 sentence_vector1 = biobert.sentence_vector('Breast cancers with HER2 amplification have a higher risk of CNS metastasis and poorer prognosis.')
 sentence_vector2 = biobert.sentence_vector('Breast cancers with HER2 amplification are more aggressive, have a higher risk of CNS metastasis, and poorer prognosis.')
 
-cosine_sim = 1 - distance.cosine(sentence_vector1, sentence_vector2)
+cosine_sim = 1 - cosine_distance(sentence_vector1, sentence_vector2)
 print('cosine similarity:', cosine_sim)
 #cosine similarity: 0.992756187915802
 ```
